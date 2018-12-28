@@ -10,7 +10,6 @@ from matplotlib import rc
 import matplotlib.pyplot as plt
 from io import BytesIO
 import random
-from sympy import preview
 
 rc('text', usetex=True)
 
@@ -18,31 +17,21 @@ rc('text', usetex=True)
 def render_latex_formula(formula_string):
 
     plt.clf()
-    plt.text(0.0, 0.0, txte, fontsize=20)
+    plt.text(0.0, 0.0, formula_string, fontsize=20)
     plt.axis('off')
-        
+
 
     fig = matplotlib.pyplot.gcf()
     fig.set_size_inches(5, 2)
-    
+
     buf = BytesIO()
-    #have isolated the issue to right here:
     plt.savefig(buf, format='png')
-    
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")   
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")
-    #print("HELLOASWEGFUWAEFBWIOrbgiwbrighberifnvaiwjedfnijwnerfijwqnbrigbeqrihbgiherbriugbnijkfnvjaenfognwer")   
-    
+
     buf.seek(0)
-    
+
     pim = Image.open(buf)
     im = np.array(pim)[...,0]
-    
+
     blacks = np.where(im==0)
     top = np.min(blacks[0])
     bottom = np.max(blacks[0])
@@ -53,13 +42,13 @@ def render_latex_formula(formula_string):
 
 
 ops = ['+', '-', '*', '/']
-latex_scripts = ['\leq', '\\times', '\infty', '\prime', 
+latex_scripts = ['\leq', '\\times', '\infty', '\prime',
                  '\\approx', '\subset', '^{\circ}',
                  '\det', '\div', '\int', '\oint','\mp' ]
-greek_letters = ['\\theta', '\lambda', '\delta', '\\alpha', 
-                 '\\beta', '\epsilon', '\pi', '\Psi', '\Pi', 
+greek_letters = ['\\theta', '\lambda', '\delta', '\\alpha',
+                 '\\beta', '\epsilon', '\pi', '\Psi', '\Pi',
                  '\Lambda', '\\upsilon', '\zeta', '\Phi',
-                 '\Xi', '\sigma', '\\nu', '\gamma', 
+                 '\Xi', '\sigma', '\\nu', '\gamma',
                  '\kappa']
 
 
@@ -75,17 +64,15 @@ def math_string():
     greek2= random.choice(greek_letters)
     math1 = random.choice(math_mode)
     math2= random.choice(math_mode)
-    
+
     stuff = ' '.join([num1, operation, greek1, scripts, greek2, math1, num2, math2, num1, greek2, scripts, greek1, operation, num2])
     return '${}$'.format(stuff)
-#j=100
-    
+
 
 if __name__ == '__main__':
-#    txte = r"\int_{a}^{b} x^2 dx"
     for i in np.arange(0,100):
         txte = math_string()
-        print(txte) 
+        print(txte)
         p = render_latex_formula(txte)
-        #preview(txte, viewer='file', filename='C:/Users/madel/OneDrive/Documents/unblur_filter/images/images/%d.png' %j)
-        #j+=1
+        p.save('images/{}.png'.format(i))
+
