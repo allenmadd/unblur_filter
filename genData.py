@@ -45,9 +45,10 @@ def render_latex_formula(formula_string):
     left = np.min(blacks[1])
     right = np.max(blacks[1])
     pim = pim.crop((left-10,top-10,right+10,bottom+10))
-    background = Image.fromarray(np.ones((80,450,3),dtype=np.uint8)*255)
+    background = Image.fromarray(np.ones((80,450),dtype=np.uint8)*255)
     background.paste(pim,(225-int(pim.size[0]*0.5),40-int(pim.size[1]*0.5)))
     background = np.array(background)
+    background = np.expand_dims(background,-1)
     return background
 
 
@@ -80,26 +81,27 @@ def math_string():
     return '${}$'.format(stuff)
 
 def make_model():
-    input = Input((None,None,3))
+    input = Input((None,None,1))
     x = Conv2D(5, (3, 3), padding="same")(input)
-    # x = BatchNormalization()(x)
-    # x = LeakyReLU(0.3)(x)
-    x = Conv2D(20, (3, 3), padding="same")(x)
-    # x = BatchNormalization()(x)
-    # x = LeakyReLU(0.3)(x)
-    x = Conv2D(3, (3, 3), padding="same")(x)
-    x = Activation('sigmoid')(x)
+    x = Conv2D(10, (3, 3), padding="same")(x)
+    x = BatchNormalization()(x)
+    x = LeakyReLU(0.3)(x)
+    x = Conv2D(10, (3, 3), padding="same")(x)
+    x = BatchNormalization()(x)
+    x = LeakyReLU(0.3)(x)
+    x = Conv2D(1, (3, 3), padding="same")(x)
+    #x = Activation('sigmoid')(x)
     model = Model(input=[input],output=[x])
     model.compile(optimizer=Adam(lr=0.001), loss='mse')
     return model
 
 
 
-
 if __name__ == '__main__':
     m = make_model()
-    if os._exists('weights.h5'):
+    if os.path.exists('weights.h5'):
         m.load_weights('weights.h5')
+        print('loaded weights') #delete this file to re train
     batch_size = 5 # our computers aren't good for this
     while True:
         #get images
@@ -111,7 +113,21 @@ if __name__ == '__main__':
             blurred_im = gaussian_filter(im,sigma=3,order=0)
             blurred.append(blurred_im/255.0)
         X = np.array(blurred)
+        #fo shitz
+        #X = X + np.random.normal(0,0.1,X.shape)
+        X = np.clip(X,0,1)
         Y = np.array(unblurred)
-        l = m.train_on_batch(X,Y)
-        print(l)
-        m.save_weights('weights.h5')
+
+        # testing
+        # preds = m.predict(X)
+        # for i in np.arange(0,batch_size):
+        #     x = preds[i]
+        #     x = np.squeeze(x,axis=-1)
+        #     im = Image.fromarray((x*255.0).astype(np.uint8))
+        #     im.show()
+        # exit()
+
+        # training
+        # l = m.train_on_batch(X,Y)
+        # print(l)
+        # m.save_weights('weights.h5')
