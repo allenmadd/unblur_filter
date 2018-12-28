@@ -13,12 +13,14 @@ Created on Thu Dec 20 23:05:04 2018
 
 import numpy as np
 from PIL import Image
-import cv2
+#import cv2
 from pathlib import Path
 
 
-retrieve_folder= "C:/Users/madel/OneDrive/Documents/unblur_filter/images/blurred_images"
-save_folder= "C:/Users\madel/OneDrive/Documents/unblur_filter/images/model_outputs"
+
+
+retrieve_folder= "~/unblur_filter/images/blurred_images"
+save_folder= "~/unblur_filter/images/model_outputs"
 pathlist = Path(retrieve_folder).glob('**/*.png')
 #i=0
 #data = np.zeros((100,49,268)) #literally not sure how dimensions work
@@ -72,7 +74,7 @@ print(K.image_data_format())
 seed = 7
 np.random.seed(seed)
 # define path to save model
-model_path_cnn = 'C:/Users/madel/OneDrive/Documents/unblur_filter/fm_cnn_model.h5'
+model_path_cnn = '~/unblur_filter/fm_cnn_model.h5'
 
 # training configuration
 batch_size = 400
@@ -101,9 +103,10 @@ n_splits = 5
 #
 
 # get data
-test  = pd.read_csv('C:/Users/madel/OneDrive/Documents/unblur_filter/images/blurred_images/test_csv/testing.csv')
+test  = pd.read_csv('~/unblur_filter/test_csv/testing.csv')
 
-train = pd.read_csv('C:/Users/madel/OneDrive/Documents/unblur_filter/images/blurred_images/train_csv/training.csv')
+train = pd.read_csv('~/unblur_filter/train_csv/training.csv')
+
 print('train shape: {}'.format(train.shape))
 print('test shape: {}'.format(test.shape))
 
@@ -253,7 +256,7 @@ def main():
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
-    fig_acc.savefig("C:/Users/madel/OneDrive/Documents/unblur_filter/model_accuracy_fm_cnn.png")
+    fig_acc.savefig("~/unblur_filter/model_accuracy_fm_cnn.png")
 
 if __name__=="__main__":
     main()
