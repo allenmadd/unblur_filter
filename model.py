@@ -168,6 +168,14 @@ def main():
     # Same for the test set.
     #########################################################
     y_train_CNN = train.ix[:,0].values.astype('int32') # only labels i.e targets digits
+
+
+############### NEED HELP  RIGHT HERE
+    ############
+    ############
+    ###########
+    ###########
+    ###############
     X_train_CNN = np.array(train.iloc[:,1:].values).reshape(train.shape[0], 1, 28, 28).astype(np.uint8)# reshape to be [samples][pixels][width][height]
     print('train shape after reshape: {}'.format(X_train_CNN.shape))
     
